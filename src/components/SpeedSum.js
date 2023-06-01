@@ -38,7 +38,7 @@ export default function SpeedSum() {
 
     useEffect(() => {
         const calculatedAnswer = calculateAnswer();
-        if (answer === calculatedAnswer.toString()) {
+        if (answer !== '' && answer === calculatedAnswer.toString()) {
             setScore((prevScore) => prevScore + 1);
             
             generateNumbers();
@@ -48,11 +48,19 @@ export default function SpeedSum() {
     }, [answer]);
 
     const generateNumbers = () => {
-        const randomNum1 = Math.floor(Math.random() * 10) + 1;
-        const randomNum2 = Math.floor(Math.random() * 10) + 1;
+        let randomNum1, randomNum2;
+        switch (operator) {
+          case "/":
+            randomNum2 = Math.floor(Math.random() * 9) + 1;
+            randomNum1 = randomNum2 * (Math.floor(Math.random() * 9) + 1); 
+            break;
+          default:
+            randomNum1 = Math.floor(Math.random() * 10) + 1;
+            randomNum2 = Math.floor(Math.random() * 10) + 1;
+        }
         setANum(randomNum1);
         setBNum(randomNum2);
-    };
+      };      
 
     const generateOperator = () => {
         const randomOperator = operations[Math.floor(Math.random() * operations.length)];
@@ -68,11 +76,11 @@ export default function SpeedSum() {
             case "*":
                 return aNum * bNum;
             case "/":
-                if (aNum / bNum === 0) {
-                    return aNum / bNum;
-                }
-                else{
-
+                if(aNum % bNum === 0){
+                    return aNum / bNum
+                }else{
+                    generateNumbers()
+                    generateOperator()
                 }
             default:
                 return "";
